@@ -4,56 +4,145 @@ import { NextResponse } from "next/server";
 import { google } from "@ai-sdk/google";
 import { getCompanyLogo } from "@/lib/utils";
 export async function GET(){
-    return NextResponse.json({success: true, data:"Thank You"}, {status: 200})
+    return NextResponse.json({
+  success: true,
+  data: "NEW DEPLOY ACTIVE"
+});
 }
 
-export async function POST(request){
+// export async function POST(request) {
 
-    const { type, role, company, level, techstack, amount, userid } = await request.json()
+//     const {
+//         type,
+//         role,
+//         company,
+//         level,
+//         techstack,
+//         amount,
+//     } = await request.json();
 
-    try{
+//     try {
 
-        const {text}  = await generateText({
+//         const { text } = await generateText({
 
-            model : google("gemini-2.5-flash"),
-            prompt : `Prepare questions for a job interview.
-        The job role is ${role}.
-        The target company is ${company}.
-        The job experience level is ${level}.
-        The tech stack used in the job is: ${techstack}.
-        The focus between behavioural and technical questions should lean towards: ${type}.
-        The amount of questions required is: ${amount}.
-        Please return only the questions, without any additional text.
-        The questions are going to be read by a voice assistant so do not use "/" or "*" or any other special characters which might break the voice assistant.
-        Return the questions formatted like this:
-        ["Question 1", "Question 2", "Question 3"]
-        
-        Thank you! <3
-    `,
+//             model: google("gemini-2.5-flash-lite"),
 
-        })
+//             maxRetries: 0,
 
-        const interview = {
-                  role: role,
-                    type: type,
-                    company : company,
-                    level: level,
-                    techstack: techstack.split(","),
-                    questions: JSON.parse(text),
-                    userId: userid,
-                    finalized: true,
-                    coverImage: await getCompanyLogo(company),
-                    createdAt: new Date().toISOString(),
-        }
+//             prompt: `
+//                 Generate ${amount} interview questions.
 
-        await db.collection('interviews').add(interview)
+//                 Role: ${role}
+//                 Company: ${company}
+//                 Experience Level: ${level}
+//                 Tech Stack: ${techstack}
+//                 Interview Type: ${type}
 
-        return NextResponse.json({success: true}, {status: 200})
+//                 Return ONLY a valid JSON array of strings.
+//                 Do not include markdown.
+//                 Do not include \`\`\`json.
+//                 Do not include explanations.
+//                 `,
+//         });
 
+//         const cleanedText = text
+//             .replace(/```json/g, "")
+//             .replace(/```/g, "")
+//             .trim();
 
+//         let parsedQuestions = [];
 
-    }catch(error){
-        console.log(error);
-        return NextResponse.json({success : false, message: error.message}, {status : 500})
+//         try {
+
+//             parsedQuestions = JSON.parse(cleanedText);
+
+//         } catch (parseError) {
+
+//             console.log("JSON PARSE ERROR:", parseError);
+
+//             return NextResponse.json(
+//                 {
+//                     success: false,
+//                     message: "Failed to parse generated questions",
+//                 },
+//                 {
+//                     status: 500,
+//                 }
+//             );
+//         }
+
+//         const interview = {
+
+//             role,
+//             type,
+//             company,
+//             level,
+
+//             techstack: techstack
+//                 .split(",")
+//                 .map((item) => item.trim()),
+
+//             questions: parsedQuestions,
+
+//             userId: "anonymous",
+
+//             finalized: true,
+
+//             coverImage: await getCompanyLogo(company),
+
+//             createdAt: new Date().toISOString(),
+//         };
+
+//         await db
+//             .collection("interviews")
+//             .add(interview);
+
+//         return NextResponse.json(
+//             {
+//                 success: true,
+//                 data: interview,
+//             },
+//             {
+//                 status: 200,
+//             }
+//         );
+
+//     } catch (error) {
+
+//         console.log("GENERATE INTERVIEW ERROR:", error);
+
+//         return NextResponse.json(
+//             {
+//                 success: false,
+//                 message: error.message,
+//             },
+//             {
+//                 status: 500,
+//             }
+//         );
+//     }
+// }
+
+export async function POST(request) {
+
+    try {
+
+        const body = await request.json();
+
+        console.log("VAPI BODY:", body);
+
+        return NextResponse.json({
+            success: true,
+            data: "Backend received successfully"
+        });
+
+    } catch (error) {
+
+        console.log("ERROR:", error);
+
+        return NextResponse.json({
+            success: false,
+            message: error.message
+        });
     }
 }
