@@ -127,22 +127,54 @@ export async function POST(request) {
 
     try {
 
-        const body = await request.json();
+        const {
+            role,
+            type,
+            company,
+            level,
+            techstack,
+            amount,
+        } = await request.json();
 
-        console.log("VAPI BODY:", body);
+        console.log("BODY RECEIVED:", {
+            role,
+            type,
+            company,
+            level,
+            techstack,
+            amount,
+        });
+
+        await db.collection("interviews").add({
+
+            role,
+            type,
+            company,
+            level,
+
+            techstack: techstack
+                .split(",")
+                .map((item) => item.trim()),
+
+            amount: Number(amount),
+
+            createdAt: new Date().toISOString(),
+
+            test: true,
+        });
 
         return NextResponse.json({
             success: true,
-            data: "Backend received successfully"
+            data: "Firestore document created successfully",
         });
 
     } catch (error) {
 
-        console.log("ERROR:", error);
+        console.log("FIRESTORE TEST ERROR:", error);
 
         return NextResponse.json({
             success: false,
-            message: error.message
+            message: error.message,
         });
     }
 }
