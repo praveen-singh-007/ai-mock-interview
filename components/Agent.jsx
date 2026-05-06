@@ -71,17 +71,7 @@ const Agent = ({ userName, userId, type }) => {
       CallStatus.CONNECTING
     );
 console.log("Starting Vapi with squadId", "38741758-f1c0-4473-b79c-92bc58173942");
-   await vapi.start({
-  assistant: {
-    assistantId: "2089cb85-f20f-438c-9189-f17d12020a31",
-    assistantOverrides: {
-      variableValues: {
-        username: userName,
-        userid: userId,
-      },
-    },
-  },
-});
+   await vapi.start("2089cb85-f20f-438c-9189-f17d12020a31");
 
   } catch (error) {
 
