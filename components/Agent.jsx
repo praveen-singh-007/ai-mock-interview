@@ -63,67 +63,28 @@ const Agent = ({ userName, userId, type }) => {
     }
   },[callStatus])
 
-const handleCall = async () => {
-
+  const handleCall = async () => {
   try {
+    setCallStatus(CallStatus.CONNECTING);
 
-    setCallStatus(
-      CallStatus.CONNECTING
-    );
+    const r = await fetch("/api/vapi/webcall", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: userName, userid: userId }),
+    });
 
-    const response = await fetch(
-
-      "/api/vapi/webcall",
-
-      {
-
-        method: "POST",
-
-        headers: {
-          "Content-Type":
-            "application/json",
-        },
-
-        body: JSON.stringify({
-
-          username: userName,
-
-          userid: userId,
-
-        }),
-
-      }
-    );
-
-    const call =
-      await response.json();
-
-    console.log(
-      "WEBCALL RESPONSE:",
-      call
-    );
-
-    if (!response.ok) {
-
-      setCallStatus(
-        CallStatus.INACTIVE
-      );
-
+    const call = await r.json();
+    if (!r.ok) {
+      console.log("CREATE WEBCALL FAILED:", call);
+      setCallStatus(CallStatus.INACTIVE);
       return;
     }
 
+    // Start the call using the returned call payload
     await vapi.start(call);
-
-  } catch (error) {
-
-    console.log(
-      "VAPI START ERROR:",
-      error
-    );
-
-    setCallStatus(
-      CallStatus.INACTIVE
-    );
+  } catch (e) {
+    console.log("VAPI START ERROR:", e);
+    setCallStatus(CallStatus.INACTIVE);
   }
 };
   const handleDisconnect = async() =>{
