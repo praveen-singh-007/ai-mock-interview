@@ -147,7 +147,7 @@ export async function POST(request) {
 
         const { text } = await generateText({
 
-            model: google("gemini-2.5-flash-lite"),
+            model: google("gemini-2.5-flash"),
 
             maxRetries: 0,
 
