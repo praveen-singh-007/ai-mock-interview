@@ -63,7 +63,7 @@ const Agent = ({ userName, userId, type }) => {
     }
   },[callStatus])
 
-  const handleCall = async () => {
+const handleCall = async () => {
 
   try {
 
@@ -126,7 +126,6 @@ const Agent = ({ userName, userId, type }) => {
     );
   }
 };
-  
   const handleDisconnect = async() =>{
     setCallStatus(CallStatus.FINISHED)
     vapi.stop()
