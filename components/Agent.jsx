@@ -70,25 +70,16 @@ const Agent = ({ userName, userId, type }) => {
     setCallStatus(
       CallStatus.CONNECTING
     );
-
+console.log("Starting Vapi with squadId", "38741758-f1c0-4473-b79c-92bc58173942");
     await vapi.start({
-
-      squadId:
-        "38741758-f1c0-4473-b79c-92bc58173942",
-
-      squadOverrides: {
-
-        variableValues: {
-
-          username: userName,
-
-          userid: userId,
-
-        },
-
-      },
-
-    });
+  squadId: "38741758-f1c0-4473-b79c-92bc58173942",
+  squadOverrides: {
+    variableValues: {
+      username: userName,
+      userid: userId,
+    },
+  },
+});
 
   } catch (error) {
 
