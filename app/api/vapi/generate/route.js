@@ -145,8 +145,6 @@ export async function POST(request) {
             amount,
         });
 
-        console.log("CALLING GEMINI");
-
         const { text } = await generateText({
 
             model: google("gemini-2.5-flash-lite"),
@@ -162,23 +160,57 @@ Experience Level: ${level}
 Tech Stack: ${techstack}
 Interview Type: ${type}
 
-Return simple plain text questions.
+Return ONLY a valid JSON array of strings.
+
+Example:
+[
+  "Question 1",
+  "Question 2"
+]
+
+Do not use markdown.
+Do not use \`\`\`.
 `,
         });
 
-        console.log("GEMINI RESPONSE:", text);
+        console.log("RAW GEMINI RESPONSE:", text);
+
+        const cleanedText = text
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+        const questions = JSON.parse(cleanedText);
+
+        await db.collection("interviews").add({
+
+            role,
+            type,
+            company,
+            level,
+
+            techstack: techstack
+                .split(",")
+                .map((item) => item.trim()),
+
+            questions,
+
+            finalized: true,
+
+            createdAt: new Date().toISOString(),
+        });
 
         return NextResponse.json({
 
             success: true,
 
-            data: text,
+            data: questions,
 
         });
 
     } catch (error) {
 
-        console.log("GEMINI TEST ERROR:", error);
+        console.log("STEP 3 ERROR:", error);
 
         return NextResponse.json({
 
