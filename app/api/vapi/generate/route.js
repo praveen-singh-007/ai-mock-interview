@@ -156,33 +156,26 @@ Generate ${amount} interview questions.
 
 Role: ${role}
 Company: ${company}
-Experience Level: ${level}
+Level: ${level}
 Tech Stack: ${techstack}
 Interview Type: ${type}
 
-Return ONLY a valid JSON array of strings.
-
-Example:
-[
-  "Question 1",
-  "Question 2"
-]
-
+Return each question on a new line.
+Do not number them.
 Do not use markdown.
-Do not use \`\`\`.
 `,
         });
 
         console.log("RAW GEMINI RESPONSE:", text);
 
-        const cleanedText = text
-            .replace(/```json/g, "")
-            .replace(/```/g, "")
-            .trim();
+        const questions = text
+            .split("\n")
+            .map((question) => question.trim())
+            .filter((question) => question.length > 0);
 
-        const questions = JSON.parse(cleanedText);
+        console.log("PARSED QUESTIONS:", questions);
 
-        await db.collection("interviews").add({
+        const interview = {
 
             role,
             type,
@@ -198,19 +191,23 @@ Do not use \`\`\`.
             finalized: true,
 
             createdAt: new Date().toISOString(),
-        });
+        };
+
+        await db
+            .collection("interviews")
+            .add(interview);
 
         return NextResponse.json({
 
             success: true,
 
-            data: questions,
+            data: interview,
 
         });
 
     } catch (error) {
 
-        console.log("STEP 3 ERROR:", error);
+        console.log("POST ERROR:", error);
 
         return NextResponse.json({
 
