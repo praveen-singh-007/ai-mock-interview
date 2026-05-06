@@ -63,17 +63,42 @@ const Agent = ({ userName, userId, type }) => {
     }
   },[callStatus])
 
-  const handleCall = async()=>{
-    setCallStatus(CallStatus.CONNECTING);
-    await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID, {
-      variableValues:{
-        username : userName,
-        userid : userId
-      }
+const handleCall = async () => {
 
-    })
+  try {
+
+    console.log(
+      "WORKFLOW ID:",
+      process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID
+    );
+
+    setCallStatus(CallStatus.CONNECTING);
+
+    await vapi.start(
+
+      process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
+
+      {
+        variableValues: {
+
+          username: userName,
+
+          userid: userId,
+
+        },
+      }
+    );
+
+  } catch (error) {
+
+    console.log(
+      "VAPI START ERROR:",
+      error
+    );
+
+    setCallStatus(CallStatus.INACTIVE);
   }
-  
+};
   const handleDisconnect = async() =>{
     setCallStatus(CallStatus.FINISHED)
     vapi.stop()
