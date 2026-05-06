@@ -14,7 +14,9 @@ export async function POST(req) {
       assistantOverrides: {
         variableValues: { username, userid },
       },
-      transport: { provider: "web" }, // <-- key change
+      transport: {
+        provider: "daily",
+      },
     }),
   });
 
