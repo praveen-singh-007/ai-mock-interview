@@ -10,7 +10,7 @@ export async function POST(req) {
     } = await req.json();
 
     const response = await fetch(
-      "https://api.vapi.ai/call",
+      "https://api.vapi.ai/call/web",
       {
 
         method: "POST",
