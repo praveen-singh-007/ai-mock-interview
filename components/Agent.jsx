@@ -67,22 +67,52 @@ const handleCall = async () => {
 
   try {
 
-    console.log(
-      "WORKFLOW ID:",
-      process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID
+    setCallStatus(
+      CallStatus.CONNECTING
     );
 
-    setCallStatus(CallStatus.CONNECTING);
+    const response = await fetch(
 
-   await vapi.start({
-  workflowId: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
-  assistantOverrides: {
-    variableValues: {
-      username: userName,
-      userid: userId,
-    },
-  },
-});
+      "/api/vapi/webcall",
+
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+
+          username: userName,
+
+          userid: userId,
+
+        }),
+
+      }
+    );
+
+    const call =
+      await response.json();
+
+    console.log(
+      "WEBCALL RESPONSE:",
+      call
+    );
+
+    if (!response.ok) {
+
+      setCallStatus(
+        CallStatus.INACTIVE
+      );
+
+      return;
+    }
+
+    await vapi.start(call);
 
   } catch (error) {
 
@@ -91,7 +121,9 @@ const handleCall = async () => {
       error
     );
 
-    setCallStatus(CallStatus.INACTIVE);
+    setCallStatus(
+      CallStatus.INACTIVE
+    );
   }
 };
   const handleDisconnect = async() =>{
