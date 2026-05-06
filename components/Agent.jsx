@@ -63,16 +63,69 @@ const Agent = ({ userName, userId, type }) => {
     }
   },[callStatus])
 
-  const handleCall = async()=>{
-    setCallStatus(CallStatus.CONNECTING);
-    await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID, {
-      variableValues:{
-        username : userName,
-        userid : userId
-      }
+  const handleCall = async () => {
 
-    })
+  try {
+
+    setCallStatus(
+      CallStatus.CONNECTING
+    );
+
+    const response = await fetch(
+
+      "/api/vapi/webcall",
+
+      {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+
+          username: userName,
+
+          userid: userId,
+
+        }),
+
+      }
+    );
+
+    const call =
+      await response.json();
+
+    console.log(
+      "WEBCALL RESPONSE:",
+      call
+    );
+
+    if (!response.ok) {
+
+      setCallStatus(
+        CallStatus.INACTIVE
+      );
+
+      return;
+    }
+
+    await vapi.start(call);
+
+  } catch (error) {
+
+    console.log(
+      "VAPI START ERROR:",
+      error
+    );
+
+    setCallStatus(
+      CallStatus.INACTIVE
+    );
   }
+};
   
   const handleDisconnect = async() =>{
     setCallStatus(CallStatus.FINISHED)
