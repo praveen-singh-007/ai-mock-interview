@@ -145,36 +145,47 @@ export async function POST(request) {
             amount,
         });
 
-        await db.collection("interviews").add({
+        console.log("CALLING GEMINI");
 
-            role,
-            type,
-            company,
-            level,
+        const { text } = await generateText({
 
-            techstack: techstack
-                .split(",")
-                .map((item) => item.trim()),
+            model: google("gemini-2.5-flash-lite"),
 
-            amount: Number(amount),
+            maxRetries: 0,
 
-            createdAt: new Date().toISOString(),
+            prompt: `
+Generate ${amount} interview questions.
 
-            test: true,
+Role: ${role}
+Company: ${company}
+Experience Level: ${level}
+Tech Stack: ${techstack}
+Interview Type: ${type}
+
+Return simple plain text questions.
+`,
         });
 
+        console.log("GEMINI RESPONSE:", text);
+
         return NextResponse.json({
+
             success: true,
-            data: "Firestore document created successfully",
+
+            data: text,
+
         });
 
     } catch (error) {
 
-        console.log("FIRESTORE TEST ERROR:", error);
+        console.log("GEMINI TEST ERROR:", error);
 
         return NextResponse.json({
+
             success: false,
+
             message: error.message,
+
         });
     }
 }
