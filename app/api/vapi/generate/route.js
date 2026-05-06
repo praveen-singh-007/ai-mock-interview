@@ -1,226 +1,26 @@
 import { db } from "@/firebase/admin";
-import { generateText } from "ai";
 import { NextResponse } from "next/server";
-import { google } from "@ai-sdk/google";
 import { getCompanyLogo } from "@/lib/utils";
-// export async function GET(){
-//     return NextResponse.json({
-//   success: true,
-//   data: "NEW DEPLOY ACTIVE"
-// });
-// }
 
-// // export async function POST(request) {
+import OpenAI from "openai";
 
-// //     const {
-// //         type,
-// //         role,
-// //         company,
-// //         level,
-// //         techstack,
-// //         amount,
-// //     } = await request.json();
+const client = new OpenAI({
 
-// //     try {
+    apiKey: process.env.GROQ_API_KEY,
 
-// //         const { text } = await generateText({
+    baseURL: "https://api.groq.com/openai/v1",
 
-// //             model: google("gemini-2.5-flash-lite"),
+});
 
-// //             maxRetries: 0,
+export async function GET() {
 
-// //             prompt: `
-// //                 Generate ${amount} interview questions.
+    return NextResponse.json({
 
-// //                 Role: ${role}
-// //                 Company: ${company}
-// //                 Experience Level: ${level}
-// //                 Tech Stack: ${techstack}
-// //                 Interview Type: ${type}
+        success: true,
+        data: "API is working",
 
-// //                 Return ONLY a valid JSON array of strings.
-// //                 Do not include markdown.
-// //                 Do not include \`\`\`json.
-// //                 Do not include explanations.
-// //                 `,
-// //         });
-
-// //         const cleanedText = text
-// //             .replace(/```json/g, "")
-// //             .replace(/```/g, "")
-// //             .trim();
-
-// //         let parsedQuestions = [];
-
-// //         try {
-
-// //             parsedQuestions = JSON.parse(cleanedText);
-
-// //         } catch (parseError) {
-
-// //             console.log("JSON PARSE ERROR:", parseError);
-
-// //             return NextResponse.json(
-// //                 {
-// //                     success: false,
-// //                     message: "Failed to parse generated questions",
-// //                 },
-// //                 {
-// //                     status: 500,
-// //                 }
-// //             );
-// //         }
-
-// //         const interview = {
-
-// //             role,
-// //             type,
-// //             company,
-// //             level,
-
-// //             techstack: techstack
-// //                 .split(",")
-// //                 .map((item) => item.trim()),
-
-// //             questions: parsedQuestions,
-
-// //             userId: "anonymous",
-
-// //             finalized: true,
-
-// //             coverImage: await getCompanyLogo(company),
-
-// //             createdAt: new Date().toISOString(),
-// //         };
-
-// //         await db
-// //             .collection("interviews")
-// //             .add(interview);
-
-// //         return NextResponse.json(
-// //             {
-// //                 success: true,
-// //                 data: interview,
-// //             },
-// //             {
-// //                 status: 200,
-// //             }
-// //         );
-
-// //     } catch (error) {
-
-// //         console.log("GENERATE INTERVIEW ERROR:", error);
-
-// //         return NextResponse.json(
-// //             {
-// //                 success: false,
-// //                 message: error.message,
-// //             },
-// //             {
-// //                 status: 500,
-// //             }
-// //         );
-// //     }
-// // }
-
-// export async function POST(request) {
-
-//     try {
-
-//         const {
-//             role,
-//             type,
-//             company,
-//             level,
-//             techstack,
-//             amount,
-//         } = await request.json();
-
-//         console.log("BODY RECEIVED:", {
-//             role,
-//             type,
-//             company,
-//             level,
-//             techstack,
-//             amount,
-//         });
-
-//         const { text } = await generateText({
-
-//             model: google("gemini-2.5-flash-lite"),
-
-//             maxRetries: 0,
-
-//             prompt: `
-// Generate ${amount} interview questions.
-
-// Role: ${role}
-// Company: ${company}
-// Experience Level: ${level}
-// Tech Stack: ${techstack}
-// Interview Type: ${type}
-
-// Return ONLY a valid JSON array of strings.
-
-// Example:
-// [
-//   "Question 1",
-//   "Question 2"
-// ]
-
-// Do not use markdown.
-// Do not use \`\`\`.
-// `,
-//         });
-
-//         console.log("RAW GEMINI RESPONSE:", text);
-
-//         const cleanedText = text
-//             .replace(/```json/g, "")
-//             .replace(/```/g, "")
-//             .trim();
-
-//         const questions = JSON.parse(cleanedText);
-
-//         await db.collection("interviews").add({
-
-//             role,
-//             type,
-//             company,
-//             level,
-
-//             techstack: techstack
-//                 .split(",")
-//                 .map((item) => item.trim()),
-
-//             questions,
-
-//             finalized: true,
-
-//             createdAt: new Date().toISOString(),
-//         });
-
-//         return NextResponse.json({
-
-//             success: true,
-
-//             data: questions,
-
-//         });
-
-//     } catch (error) {
-
-//         console.log("STEP 3 ERROR:", error);
-
-//         return NextResponse.json({
-
-//             success: false,
-
-//             message: error.message,
-
-//         });
-//     }
-// }
+    });
+}
 
 export async function POST(request) {
 
@@ -237,6 +37,7 @@ export async function POST(request) {
         } = await request.json();
 
         console.log("BODY RECEIVED:", {
+
             role,
             type,
             company,
@@ -244,6 +45,7 @@ export async function POST(request) {
             techstack,
             amount,
             userid,
+
         });
 
         const completion =
@@ -252,6 +54,7 @@ export async function POST(request) {
                 model: "llama-3.1-8b-instant",
 
                 messages: [
+
                     {
                         role: "system",
 
@@ -298,8 +101,8 @@ Tech Stack: ${techstack}
         const questions = text
             .split("\n")
             .map((question) => question.trim())
-            .filter((question) =>
-                question.length > 10
+            .filter(
+                (question) => question.length > 10
             );
 
         console.log("PARSED QUESTIONS:", questions);
@@ -347,6 +150,7 @@ Tech Stack: ${techstack}
             interviewId: docRef.id,
 
             data: interview,
+
         });
 
     } catch (error) {
@@ -363,6 +167,11 @@ Tech Stack: ${techstack}
             message:
                 error.message ||
                 "Failed to generate interview",
+
+        }, {
+
+            status: 500,
+
         });
     }
 }
