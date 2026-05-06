@@ -10,13 +10,12 @@ export async function POST(req) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      type: "webCall",
       workflowId: process.env.VAPI_WORKFLOW_ID,
       assistantOverrides: {
         variableValues: { username, userid },
       },
-      transport: {
-        provider: "daily",
-      },
+      transport: { provider: "daily" },
     }),
   });
 
