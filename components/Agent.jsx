@@ -74,19 +74,14 @@ const handleCall = async () => {
 
     setCallStatus(CallStatus.CONNECTING);
 
-    await vapi.start({
-
-  workflowId:
-    process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
-
-  variableValues: {
-
-    username: userName,
-
-    userid: userId,
-
+   await vapi.start({
+  workflowId: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
+  assistantOverrides: {
+    variableValues: {
+      username: userName,
+      userid: userId,
+    },
   },
-
 });
 
   } catch (error) {
