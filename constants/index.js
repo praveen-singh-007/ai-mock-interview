@@ -290,3 +290,104 @@ export const dummyInterviews= [
 // What are the differences in registering an iOS or web app compared to an Android app?
 // How does the google-services.json file specifically initialize Firebase in an Android project?
 // Where can I find the API key and other configuration options for a web application?
+
+export const companyMappings = {
+  // --- Big Tech / FAANG+ ---
+  google: "google",
+  alphabet: "google",
+  amazon: "amazon",
+  aws: "amazon",
+  microsoft: "microsoft",
+  msft: "microsoft",
+  netflix: "netflix",
+  meta: "meta",
+  facebook: "meta",
+  apple: "apple",
+
+  // --- AI & Data ---
+  openai: "openai",
+  anthropic: "anthropic",
+  nvidia: "nvidia",
+  palantir: "palantir",
+  databricks: "databricks",
+  snowflake: "snowflake",
+  mistral: "mistral",
+  cohere: "cohere",
+
+  // --- SaaS & Enterprise ---
+  salesforce: "salesforce",
+  adobe: "adobe",
+  oracle: "oracle",
+  sap: "sap",
+  servicenow: "servicenow",
+  atlassian: "atlassian",
+  jira: "atlassian",
+  confluence: "atlassian",
+  slack: "slack",
+  zoom: "zoom",
+  hubspot: "hubspot",
+  zendesk: "zendesk",
+  shopify: "shopify",
+
+  // --- FinTech & Payments ---
+  stripe: "stripe",
+  paypal: "paypal",
+  square: "square",
+  block: "square",
+  robinhood: "robinhood",
+  plaid: "plaid",
+  coinbase: "coinbase",
+  revolut: "revolut",
+  visa: "visa",
+  mastercard: "mastercard",
+  goldmansachs: "goldmansachs",
+
+  // --- Ride-sharing & Logistics ---
+  uber: "uber",
+  lyft: "lyft",
+  doordash: "doordash",
+  instacart: "instacart",
+  grab: "grab",
+  fedex: "fedex",
+
+  // --- Infrastructure & DevTools ---
+  cloudflare: "cloudflare",
+  vercel: "vercel",
+  netlify: "netlify",
+  github: "github",
+  gitlab: "gitlab",
+  digitalocean: "digitalocean",
+  mongodb: "mongodb",
+  postman: "postman",
+  datadog: "datadog",
+  hashicorp: "hashicorp",
+  docker: "docker",
+
+  // --- Social & Content ---
+  twitter: "twitter",
+  x: "twitter",
+  tiktok: "tiktok",
+  bytedance: "tiktok",
+  snapchat: "snapchat",
+  pinterest: "pinterest",
+  reddit: "reddit",
+  spotify: "spotify",
+  linkedin: "linkedin",
+
+  // --- Hardware & Chips ---
+  intel: "intel",
+  amd: "amd",
+  tesla: "tesla",
+  samsung: "samsung",
+  cisco: "cisco",
+  hp: "hp",
+  dell: "dell",
+
+  // --- E-commerce & Travel ---
+  ebay: "ebay",
+  airbnb: "airbnb",
+  booking: "booking",
+  expedia: "expedia",
+  walmart: "walmart",
+  target: "target",
+};
