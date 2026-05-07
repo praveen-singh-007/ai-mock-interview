@@ -14,7 +14,12 @@ import React from 'react'
 import { toast } from "sonner"
 import FormFeild from "./FormFeild"
 import { useRouter } from "next/navigation"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  signOut,
+} from "firebase/auth"; 
 import { auth } from "@/firebase/client"
 import { signin, signup } from "@/lib/actions/auth.action"
 
@@ -50,6 +55,10 @@ function AuthForm({type}) {
 
             const userCredentials = await createUserWithEmailAndPassword(auth, email, password);
 
+            await sendEmailVerification(
+                    userCredentials.user
+                    );
+
             const result = await signup({
                 uid : userCredentials.user.uid,
                 name :  name,
@@ -62,7 +71,9 @@ function AuthForm({type}) {
                 return
             }
 
-            toast.success("Account Created Successfully. Please Sign-In")
+            toast.success(
+            "Verification email sent. Please verify your email before signing in."
+            )
             router.push("/sign-in")
 
         }else{
@@ -70,6 +81,22 @@ function AuthForm({type}) {
             const {email, password} = values;
 
             const userCredentials = await signInWithEmailAndPassword(auth, email, password)
+
+            await userCredentials.user.reload();
+
+                if (
+                !userCredentials.user
+                    .emailVerified
+                ) {
+
+                await signOut(auth);
+
+                toast.error(
+                    "Please verify your email before signing in."
+                );
+
+                return;
+                }
             
             const idToken = await userCredentials.user.getIdToken()
 

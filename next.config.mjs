@@ -4,7 +4,16 @@ const nextConfig = {
   reactCompiler: true,
   eslint :{
     ignoreDuringBuilds : true,
-  }
+  },
+    images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname:
+          'cdn.simpleicons.org',
+      },
+    ],
+  },
 };
 
 
