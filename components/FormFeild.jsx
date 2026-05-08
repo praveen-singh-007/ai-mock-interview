@@ -24,9 +24,7 @@ function FormFeild({
                         <FormControl>
                             <Input className = "input" placeholder={placeholder} type = {type}{...field} />
                         </FormControl>
-                        <FormDescription>
-                            This is your public display name.
-                        </FormDescription>
+
                     <FormMessage />
                 </FormItem>
 
